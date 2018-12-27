@@ -1,0 +1,43 @@
+## @param User:title=Username|type=username|desc=Select username to display
+#set ( $userName = $paramUser )
+#set ( $user = "" )
+#set ( $containerManagerClass = $content.class.forName('com.atlassian.spring.container.ContainerManager') )
+#set ( $getInstanceMethod = $containerManagerClass.getDeclaredMethod('getInstance',null) )
+#set ( $containerManager = $getInstanceMethod.invoke(null,null) )
+#set ( $containerContext = $containerManager.containerContext )
+#set ( $userDetailsManager = $containerContext.getComponent('userDetailsManager') )
+
+#set ( $user = $userAccessor.getUserByName($userName) )
+#set ( $phone = $userDetailsManager.getStringProperty($user, "phone") )
+
+<style>
+   div.wrapper {
+        width:170px;
+ }
+div.left_block {
+         float:left;
+        width:55px;
+ }
+div.right_block {
+         float:right;
+         width:100px;
+ }
+
+div.user_data {
+             display: block;
+             float:left;
+ }
+</style>
+
+<div class="wrapper">
+    ## Display a picture of a user
+   <div class="left_block"><ac:macro ac:name="profile-picture"><ac:parameter ac:name="User">$userName</ac:parameter></ac:macro></div>
+   <div class="right_block">
+          $user.getFullName()
+          $user.getEmail()
+   </div>
+
+  <div class="user_data">
+      <b>Phone: </b> $userDetailsManager.getStringProperty($user, "phone") 
+  </div>
+</div>
