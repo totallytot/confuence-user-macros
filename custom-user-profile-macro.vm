@@ -1,4 +1,5 @@
 ## @param User:title=Username|type=username|desc=Select username to display
+## @param Email:title=Email|type=boolean
 #set ( $userName = $paramUser )
 #set ( $user = "" )
 #set ( $containerManagerClass = $content.class.forName('com.atlassian.spring.container.ContainerManager') )
@@ -37,7 +38,9 @@ div.user_data {
           $user.getEmail()
    </div>
 
+#if ($paramEmail == "true")
   <div class="user_data">
       <b>Phone: </b> $userDetailsManager.getStringProperty($user, "phone") 
   </div>
 </div>
+#end
