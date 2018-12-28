@@ -1,46 +1,86 @@
-## @param User:title=Username|type=username|desc=Select username to display
-## @param Email:title=Email|type=boolean
-#set ( $userName = $paramUser )
-#set ( $user = "" )
-#set ( $containerManagerClass = $content.class.forName('com.atlassian.spring.container.ContainerManager') )
-#set ( $getInstanceMethod = $containerManagerClass.getDeclaredMethod('getInstance',null) )
-#set ( $containerManager = $getInstanceMethod.invoke(null,null) )
-#set ( $containerContext = $containerManager.containerContext )
-#set ( $userDetailsManager = $containerContext.getComponent('userDetailsManager') )
+## Macro title: Custom User Profile Macro 
+## Macro has a body: N
+## Developed by: Totally Tot
+## Date created: 28/12/2018
+## Confluence version: 6.6.2
+## Installed by: Totally Tot
 
-#set ( $user = $userAccessor.getUserByName($userName) )
-#set ( $phone = $userDetailsManager.getStringProperty($user, "phone") )
+## Allows viewing users' profile with selected options
+
+## @param User:title=Username|type=username|required=true
+## @param Avatar:title=Avatar|type=boolean
+## @param Email:title=Email|type=boolean
+## @param Phone:title=Phone|type=boolean
+## @param IM:title=IM|type=boolean
+## @param Website:title=Website|type=boolean
+## @param Position:title=Position|type=boolean
+## @param Department:title=Department|type=boolean
+## @param Location:title=Locatiom|type=boolean
+
+#set ($containerManagerClass = $content.class.forName("com.atlassian.spring.container.ContainerManager"))
+#set ($getInstanceMethod = $containerManagerClass.getDeclaredMethod("getInstance",null))
+#set ($containerManager = $getInstanceMethod.invoke(null,null))
+#set ($containerContext = $containerManager.containerContext)
+
+#set ($userDetailsManager = $containerContext.getComponent("userDetailsManager"))
+#set ($settingsManager = $containerContext.getComponent("settingsManager"))
+#set ($user = $userAccessor.getUserByName($paramUser))
+
+#if ($user)
+  #if ($paramPhone == "true") #set ($phone = $userDetailsManager.getStringProperty($user, "phone")) #end
+  #if ($paramIM == "true") #set ($im = $userDetailsManager.getStringProperty($user, "im")) #end
+  #if ($paramWebsite == "true") #set ($website = $userDetailsManager.getStringProperty($user, "website")) #end
+  #if ($paramPosition == "true") #set ($position = $userDetailsManager.getStringProperty($user, "position")) #end
+  #if ($paramDepartment == "true") #set ($department = $userDetailsManager.getStringProperty($user, "department")) #end
+  #if ($paramLocation == "true") #set ($location = $userDetailsManager.getStringProperty($user, "location")) #end
 
 <style>
-   div.wrapper {
-        width:170px;
+div.custom-user-profile-macro {
+        display: table;
+        width:200px;
  }
-div.left_block {
-         float:left;
-        width:55px;
- }
-div.right_block {
-         float:right;
-         width:100px;
- }
-
-div.user_data {
-             display: block;
-             float:left;
+#if ($paramAvatar == "true")  
+div.user-avatar {
+         float: left; 
+         width: 40px;
+} 
+div.main-block {
+         float: right;
+         width: 140px;
+}
+#else 
+div.main-block {
+         float: left;
+         width: 140px;
+}
+#end
+div.user-data {
+         display: block;
+         float: left;    
  }
 </style>
 
-<div class="wrapper">
-    ## Display a picture of a user
-   <div class="left_block"><ac:macro ac:name="profile-picture"><ac:parameter ac:name="User">$userName</ac:parameter></ac:macro></div>
-   <div class="right_block">
-          $user.getFullName()
-          $user.getEmail()
-   </div>
+<div class="custom-user-profile-macro">
+    ## Display a picture of a user via macro
+    #if ($paramAvatar == "true") <div class="user-avatar"><ac:macro ac:name="profile-picture"><ac:parameter ac:name="User">$paramUser</ac:parameter></ac:macro></div> #end
 
-#if ($paramEmail == "true")
-  <div class="user_data">
-      <b>Phone: </b> $userDetailsManager.getStringProperty($user, "phone") 
+     ## Display full name and email
+   <div class="main-block">
+      <b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$user.getName() class="url fn confluence-userlink userlink-1" data-username="$paramUser" data-user-hover-bound="true">$user.getFullName()</a></i></b> 
+      #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()</a> #end
+   </div>
+   
+   ## Display user properties
+  <div class="user-data">
+      #if ($phone) <b>Phone: </b> $phone <br/> #end 
+      #if ($im) <b>IM: </b> $im <br/> #end 
+      #if ($website) <b>Website: </b> $website <br/> #end
+      #if ($position) <b>Position: </b> $position <br/> #end
+      #if ($department) <b>Department: </b> $department <br/> #end
+      #if ($location) <b>Location: </b> $location <br/> #end
+  <br/>
   </div>
 </div>
+#else
+   User $paramUser not found.
 #end
