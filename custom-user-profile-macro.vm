@@ -36,50 +36,55 @@
 
 <style>
 div.custom-user-profile-macro {
-        display: table;
-        width:200px;
+    display: table;
+    width:350px;
  }
 #if ($paramAvatar == "true")  
-div.user-avatar {
-         float: left; 
-         width: 40px;
+    div.user-avatar {
+    float: left; 
+    width: 40px;
 } 
 div.main-block {
-         float: right;
-         width: 140px;
+    float: right;
+    width: 295px;
 }
-#else 
-div.main-block {
-         float: left;
-         width: 140px;
-}
-#end
 div.user-data {
-         display: block;
-         float: left;    
+    display: block;
+    float: left;    
  }
+#end
 </style>
 
 <div class="custom-user-profile-macro">
-    ## Display a picture of a user via macro
-    #if ($paramAvatar == "true") <div class="user-avatar"><ac:macro ac:name="profile-picture"><ac:parameter ac:name="User">$paramUser</ac:parameter></ac:macro></div> #end
 
-     ## Display full name and email
-   <div class="main-block">
-      <b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$user.getName() class="url fn confluence-userlink userlink-1" data-username="$paramUser" data-user-hover-bound="true">$user.getFullName()</a></i></b> 
-      #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()</a> #end
-   </div>
+## Display a picture of a user via macro
+#if ($paramAvatar == "true") 
+<div class="user-avatar">
+     <ac:macro ac:name="profile-picture"><ac:parameter ac:name="User">$paramUser</ac:parameter></ac:macro>
+</div> 
+
+## Display full name and email
+<div class="main-block">
+     <b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser class="url fn confluence-userlink userlink-1" data-username="$paramUser">$user.getFullName()</a></i></b><br/>
+     #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()</a> #end
+</div>
+#end
    
-   ## Display user properties
-  <div class="user-data">
-      #if ($phone) <b>Phone: </b> $phone <br/> #end 
-      #if ($im) <b>IM: </b> $im <br/> #end 
-      #if ($website) <b>Website: </b> $website <br/> #end
-      #if ($position) <b>Position: </b> $position <br/> #end
-      #if ($department) <b>Department: </b> $department <br/> #end
-      #if ($location) <b>Location: </b> $location <br/> #end
-  <br/>
-  </div>
+## Display user properties
+<div class="user-data">
+#if ($paramAvatar == "false") 
+<b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser class="url fn confluence-userlink userlink-1" data-username="$paramUser">$user.getFullName()</a></i></b><br/>
+   #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()<br/></a>#end
+#end
+      
+#if ($phone) <b>Phone: </b> $phone <br/> #end 
+#if ($im) <b>IM: </b> $im <br/> #end 
+#if ($website) <b>Website: </b> $website <br/> #end
+#if ($position) <b>Position: </b> $position <br/> #end
+#if ($department) <b>Department: </b> $department <br/> #end
+#if ($location) <b>Location: </b> $location <br/> #end
+<br/>
+</div>
 </div>
 #else
    User $paramUser not found.
