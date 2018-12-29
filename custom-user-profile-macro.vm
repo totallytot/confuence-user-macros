@@ -41,6 +41,7 @@ div.custom-user-profile-macro {
  }
 #if ($paramAvatar == "true")  
 div.user-avatar {
+    display: contents;
     float: left; 
     width: 40px;
 } 
