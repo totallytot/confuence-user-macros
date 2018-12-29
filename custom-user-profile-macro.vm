@@ -48,11 +48,11 @@ div.main-block {
     float: right;
     width: 295px;
 }
+#end
 div.user-data {
     display: block;
     float: left;    
  }
-#end
 </style>
 
 <div class="custom-user-profile-macro">
