@@ -8,8 +8,8 @@
 ## Allows viewing users' profile with selected options
 
 ## @param User:title=Username|type=username|required=true
-## @param Avatar:title=Avatar|type=boolean
-## @param Email:title=Email|type=boolean
+## @param Avatar:title=Avatar|type=boolean|default=true
+## @param Email:title=Email|type=boolean|default=true
 ## @param Phone:title=Phone|type=boolean
 ## @param IM:title=IM|type=boolean
 ## @param Website:title=Website|type=boolean
@@ -41,11 +41,12 @@ div.custom-user-profile-macro {
  }
 #if ($paramAvatar == "true")  
 div.user-avatar {
-    display: contents;
+   display: contents;;
     float: left; 
     width: 40px;
 } 
 div.main-block {
+display: block;
     float: right;
     width: 295px;
 }
@@ -66,7 +67,7 @@ div.user-data {
 
 ## Display full name and email
 <div class="main-block">
-     <b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser class="url fn confluence-userlink userlink-1" data-username="$paramUser">$user.getFullName()</a></i></b><br/>
+<b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser title="Visit $user.getFullName()'s profile">$user.getFullName()</a></i></b><br/>
      #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()</a> #end
 </div>
 #end
@@ -74,7 +75,7 @@ div.user-data {
 ## Display user properties. If avatar is not required user full name and email will be presented in user-data block
 <div class="user-data">
 #if ($paramAvatar == "false") 
-<b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser class="url fn confluence-userlink userlink-1" data-username="$paramUser">$user.getFullName()</a></i></b><br/>
+<b><i><a href=$settingsManager.getGlobalSettings().getBaseUrl()/display/~$paramUser title="Visit $user.getFullName()'s profile">$user.getFullName()</a></i></b><br/>
    #if ($paramEmail == "true") <a href="mailto:$user.getEmail()" title="Send email to $user.getFullName()">$user.getEmail()<br/></a>#end
 #end
       
