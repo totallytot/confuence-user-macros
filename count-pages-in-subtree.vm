@@ -1,0 +1,22 @@
+## Macro title: Сount Pages In Subtree
+## Macro has a body: N
+## Developed by: Totally Tot
+## Date created: 5/13/2019
+## Confluence version: 6.15.4
+## Installed by: Totally Tot
+
+## Get number of descendant page including the input page
+
+## @param spacekey:title=SpaceKey|type=spacekey|desc=Space Key|required=true|multiple=false 
+## @param pagetitle:title=Parent|type=confluence-content|required=true|desc=Select a page which children to count
+
+#set ($containerManagerClass = $content.class.forName("com.atlassian.spring.container.ContainerManager"))
+#set ($getInstanceMethod = $containerManagerClass.getDeclaredMethod("getInstance",null))
+#set ($containerManager = $getInstanceMethod.invoke(null,null))
+#set ($containerContext = $containerManager.containerContext)
+#set ($pageManager = $containerContext.getComponent("pageManager"))
+#set ($index = $parampagetitle.indexOf(":") + 1)
+#set ($pageTitleWtSpaceKey = $parampagetitle.substring($index))
+#set ($page = $pageManager.getPage($paramspacekey, $pageTitleWtSpaceKey))
+
+$pageManager.countPagesInSubtree($page)
