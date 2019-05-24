@@ -97,24 +97,23 @@
 	</ac:structured-macro>
 	#end
 </div>
-
 <script>
 jQuery("[data-macro-name='internal_comment']").css('display','none');
 	$(function() {
-		var myVar = setInterval(timer, 100);
+		var timerInterval = setInterval(timer, 100);
 		function timer() {
 			var likesElement = $("#likes-and-labels-container");		
 			if(likesElement != null && likesElement.length > 0) {
-				clearInterval(myVar);     
-				var pagesDiv = $('#master-wrapper-localization-bottom');
+				clearInterval(timerInterval);     
+				var pagesDiv = $("#master-wrapper-localization-bottom");
 				$(pagesDiv).insertBefore(likesElement);
 				$(pagesDiv).show();
-                var lang = AJS.$("#sv-scmtb-trsl-lang-picker").text();
-                if (lang === "French (France)") {
-                    AJS.$("#master-wrapper-localization-panel > div > div > strong").text("Contenu de cette page:  ");
-                    AJS.$("#master-wrapper-localization-bottom > div > div.panelHeader > b").text("Pages pour ce contenu:");
-                }
-			}
+                		var lang = AJS.$("#sv-scmtb-trsl-lang-picker").text();
+                		if (lang === "French (France)") {
+                    			AJS.$("#master-wrapper-localization-panel > div > div > strong").text("Contenu de cette page:  ");
+                    			AJS.$("#master-wrapper-localization-bottom > div > div.panelHeader > b").text("Pages pour ce contenu:");
+                		}
+	  		}
 		}
 	});
 </script>
