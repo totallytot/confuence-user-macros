@@ -1,0 +1,123 @@
+## Macro title: Master Wrapper Macro - Content Page
+## Macro has a body: Y
+## Body processing: Unrendered
+
+## The wrapper macro will do the following:
+## 1. If Content Page,  adds summary with internal TOC at top of page
+## 2. If TOC Page,  adds summary without internal TOC at top of page, and list of child pages with summaries
+
+## ----------------------------------------
+## // WRAPPER MACRO PAGE PARAMETERS
+## ----------------------------------------
+## --- PageType ---
+## @param PageType:title=Page Type|type=enum|enumValues=TOC,Content,API|required=true|desc=Select a page type - TOC Page, Content Page, API Page
+## --- Product ---
+## @param Product:title=CKSW Product|type=string|multiple=true|required=true|desc=Enter one of more products separated by commas: ServiceEdge, ClickSchedule, ClickMobile, ClickAnalyze, CustomerEngagementModule
+## --- Module ---
+## @param Module:title=Product Module|type=string|multiple=true|required=false|desc=Enter one of more modules separated by commas: MobileTouch, MobileClassic, CAReporting, MobileMiddleTier, ScheduleUI, SEServer, SEDatabase, SEPlatform
+## --- Audience --- 
+## @param Audience:title=Audience|type=string|multiple=true|required=true|desc=Enter one or more audiences separated by commas: Architect, Implementer, Administrator, EndUser, Internal
+## --- From Version ---
+## @param CKSWFromVersion:title=From Version|type=enum|enumValues=9.0.0|required=false|desc=From version
+## --- To Version ---
+## @param CKSWToVersion:title=To Version|type=enum|enumValues=None|required=false|desc=From version
+## --- TOC Page Levels ---
+## @param TocPageLevels:title=TOC Page Levels|type=string|required=false|desc=Number of child levels to display in Learn More on TOC pages
+## ----------------------------------------
+## WRAPPER MACRO PAGE PARAMETERS ENDS //
+## ----------------------------------------
+## ----------------------------------------
+## // IMPLEMENTATION STARTS
+## ----------------------------------------
+
+## -- Create Page Content Panel --  
+<div class="master-wrapper-localization" id="master-wrapper-localization-panel"> 
+<ac:structured-macro ac:name="panel">
+<ac:rich-text-body><strong>Page Content:&nbsp;&nbsp;&nbsp;</strong>
+#if(!$body)
+	 #set ( $body = "" )
+	#end
+	## -- Get excerpt text (Text is there due to call to Excerpt macro that was done before Wrapper macro) -- 
+	<ac:structured-macro ac:name="excerpt-includeplus"> 
+               <ac:parameter ac:name="nopanel">true</ac:parameter> 
+               <ac:default-parameter>$content.getTitle()</ac:default-parameter> 
+                </ac:structured-macro> 
+	## Page TOC shown only for Content Pages with Heading level 1  
+	#if ( $paramPageType == "Content")
+	  <br><br>
+	   <ac:structured-macro ac:name="toc">
+		<ac:parameter ac:name="maxLevel">1</ac:parameter>
+		<ac:parameter ac:name="minLevel">1</ac:parameter>
+		<ac:parameter ac:name="type">flat</ac:parameter>
+		<ac:parameter ac:name="separator">pipe</ac:parameter>
+	   </ac:structured-macro>
+	#end
+	## Page TOC shown only for API Pages with Heading levels 1 - need to add implementation to display level 2 
+	#if ( $paramPageType == "API")
+	  <br><br>
+	   <ac:structured-macro ac:name="toc">
+		<ac:parameter ac:name="maxLevel">1</ac:parameter>
+		<ac:parameter ac:name="minLevel">1</ac:parameter>
+		<ac:parameter ac:name="type">flat</ac:parameter>
+		<ac:parameter ac:name="separator">pipe</ac:parameter>
+	   </ac:structured-macro>
+	#end
+  </ac:rich-text-body>
+</ac:structured-macro>
+</div>
+
+## -- Checking if user set number of levels for TOC pages for the In This Section panel
+#if ($paramTocPageLevels)
+#set ($TocLevels = $paramTocPageLevels)
+#else
+#set ($TocLevels = "2")
+#end
+## -- Create Div for "Pages For This Content", to be shown on bottom of page
+## -- CONTENT SHOWN ON BOTTOM
+<div class="master-wrapper-localization" id="master-wrapper-localization-bottom" style="">
+	## -- Children shown only for TOC pages
+	#if ( $paramPageType == "TOC" )
+	<ac:structured-macro ac:name="panel">
+	  <ac:parameter ac:name="bgColor">#FFFFFF</ac:parameter>
+	  <ac:parameter ac:name="titleBGColor">#FFFFFF</ac:parameter>
+	  <ac:parameter ac:name="title">Pages For This Content:</ac:parameter>
+	  <ac:parameter ac:name="borderStyle">solid</ac:parameter>
+	  <ac:parameter ac:name="borderColor">#2776A1</ac:parameter>
+	  <ac:parameter ac:name="titleColor">#2776A1</ac:parameter>
+	  <ac:rich-text-body>
+	<ac:structured-macro ac:name="children">
+		<ac:parameter ac:name="reverse">false</ac:parameter>
+		<ac:parameter ac:name="style">h5</ac:parameter>
+		<ac:parameter ac:name="excerpt">true</ac:parameter>
+		<ac:parameter ac:name="first">99</ac:parameter>
+		<ac:parameter ac:name="depth">$TocLevels</ac:parameter>
+		<ac:parameter ac:name="all">true</ac:parameter>
+	   </ac:structured-macro>
+	  </ac:rich-text-body>
+	</ac:structured-macro>
+	#end
+</div>
+
+<script>
+jQuery("[data-macro-name='internal_comment']").css('display','none');
+	$(function() {
+		var myVar = setInterval(timer, 100);
+		function timer() {
+			var likesElement = $("#likes-and-labels-container");		
+			if(likesElement != null && likesElement.length > 0) {
+				clearInterval(myVar);     
+				var pagesDiv = $('#master-wrapper-localization-bottom');
+				$(pagesDiv).insertBefore(likesElement);
+				$(pagesDiv).show();
+                var lang = AJS.$("#sv-scmtb-trsl-lang-picker").text();
+                if (lang === "French (France)") {
+                    AJS.$("#master-wrapper-localization-panel > div > div > strong").text("Contenu de cette page:  ");
+                    AJS.$("#master-wrapper-localization-bottom > div > div.panelHeader > b").text("Pages pour ce contenu:");
+                }
+			}
+		}
+	});
+</script>
+## ----------------------------------------
+## IMPLEMENTATION ENDS //
+## ----------------------------------------
